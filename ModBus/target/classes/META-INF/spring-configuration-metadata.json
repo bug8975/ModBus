@@ -1,0 +1,52 @@
+{
+  "groups": [
+    {
+      "name": "httpclient",
+      "type": "com.tjmj.HttpClientProperties",
+      "sourceType": "com.tjmj.HttpClientProperties"
+    },
+    {
+      "name": "httpclient.pool",
+      "type": "com.tjmj.HttpClientProperties$Pool",
+      "sourceType": "com.tjmj.HttpClientProperties",
+      "sourceMethod": "getPool()"
+    },
+    {
+      "name": "httpclient.request",
+      "type": "com.tjmj.HttpClientProperties$Request",
+      "sourceType": "com.tjmj.HttpClientProperties",
+      "sourceMethod": "getRequest()"
+    },
+    {
+      "name": "httpclient.retry",
+      "type": "com.tjmj.HttpClientProperties$Retry",
+      "sourceType": "com.tjmj.HttpClientProperties",
+      "sourceMethod": "getRetry()"
+    },
+    {
+      "name": "httpclient.wms",
+      "type": "com.tjmj.HttpClientProperties$Wms",
+      "sourceType": "com.tjmj.HttpClientProperties",
+      "sourceMethod": "getWms()"
+    },
+    {
+      "name": "modbus",
+      "type": "com.tjmj.ModbusProperties",
+      "sourceType": "com.tjmj.ModbusProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "modbus.max-retry-attempt",
+      "type": "java.lang.Integer",
+      "sourceType": "com.tjmj.ModbusProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "modbus.modbus-nodes",
+      "type": "java.util.List<com.tjmj.ModbusProperties.ModbusField>",
+      "sourceType": "com.tjmj.ModbusProperties"
+    }
+  ],
+  "hints": []
+}

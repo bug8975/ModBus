@@ -1,0 +1,356 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overriden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+server:
+    port: 8080
+    session-timeout: 30
+    tomcat.max-threads: 0
+    tomcat.uri-encoding: UTF-8
+
+spring:
+    application.name: Modbus-Connect
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/hongtai-wcs?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 123456
+#        Server configuration
+#        driver-class-name: com.mysql.jdbc.Driver
+#        url: jdbc:mysql://192.168.30.28:3306/hongtai-wcs?useUnicode=true&characterEncoding=utf8&useSSL=false
+#        username: root
+#        password: DongFengHongTai#123
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL5Dialect
+        database: MYSQL
+        show_sql: true
+        open-in-view: false
+        hibernate:
+            ddl-auto: update
+            naming:
+              strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+        properties:
+            hibernate.cache.use_second_level_cache: true
+            hibernate.cache.use_query_cache: false
+            hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+
+    redis:
+        host: www.zdmedtech.cn
+        port: 6379
+#       Server Configuration
+#        host: 192.168.30.28
+#        port: 6379
+
+# ===================================================================
+# HttpClient properties.
+# ===================================================================
+httpclient:
+     pool:
+          # 连接池连接总数
+          maxTotal: 200
+          # 每个地址的并发数
+          defaultMaxPerRoute: 100
+     request:
+          # 连接超时时间
+          connectTimeout: 5000
+          # 数据传输超时时间
+          readTimeout: 10000
+          # 连接不够用的等待时间
+          connectionRequestTimeout: 200
+     retry:
+          # 重试次数
+          retryCount: 5
+          requestSentRetryEnabled: true
+
+     wms:
+          # WMS接口地址
+          host: 192.168.30.16
+          # WMS接口端口
+          port: 7070
+
+
+# ===================================================================
+# Oracle properties
+# ===================================================================
+oracle:
+    driverName: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@192.168.30.17:1521:orcl
+    username: whwcs
+    password: wcsabc1@3
+
+# ===================================================================
+# Rabbitmq properties
+# ===================================================================
+rabbitmq:
+    hostname: www.zdmedtech.cn
+    port: 5672
+    username: zd
+    password: zdmedtech#123
+    queueName: dongfeng
+    defaultTopicExchange: dongfeng-exchange
+
+#    Server Configuration
+#    hostname: 192.168.30.28
+#    port: 5672
+#    username: dongfeng
+#    password: dongfeng
+#    queueName: dongfeng
+#    defaultTopicExchange: dongfeng-exchange
+
+# ===================================================================
+# Modbus properties.
+# ===================================================================
+modbus:
+    maxRetryAttempt: 50
+    modbusNodes:
+#        - device: Banka1
+#          host: 192.168.20.60
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka2
+#          host: 192.168.20.61
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka3
+#          host: 192.168.20.62
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka4
+#          host: 192.168.20.63
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka5
+#          host: 192.168.20.64
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka6
+#          host: 192.168.20.65
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka7
+#          host: 192.168.20.66
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka8
+#          host: 192.168.20.67
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka9
+#          host: 192.168.20.68
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka10
+#          host: 192.168.20.69
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka11
+#          host: 192.168.20.70
+#          port: 502
+#          slaveId: 1
+#
+#        - device: Banka12
+#          host: 192.168.20.71
+#          port: 502
+#          slaveId: 1
+
+        - device: StockInPLCWrite
+#          host: 192.168.20.30
+          host: 127.0.0.1
+          port: 503
+          slaveId: 3
+
+        - device: StockInPLCRead
+#          host: 192.168.20.30
+          host: 127.0.0.1
+          port: 502
+          slaveId: 2
+          subscribeNodes:
+              # 托盘 1 和 2 请求流走
+              - nodeName: StockInPLCRead.AskTrayMove
+                startAddress: 14
+                length: 2
+              # 码垛部分清除数据
+              - nodeName: StockInPLCRead.TrayDataClear
+                startAddress: 17
+                length: 2
+              # 移载请求
+              - nodeName: StockInPLCRead.TransferAsk
+                startAddress: 0
+                length: 3
+              # 移载清除数据
+              - nodeName: StockInPLCRead.TransferClear
+                startAddress: 3
+                length: 3
+              # 移载切除信号
+              - nodeName: StockInPLCRead.TransferBad
+                startAddress: 10
+                length: 2
+              # 一楼出货移载准备ok信号
+              - nodeName: StockInPLCRead.TransferOutReady
+                startAddress: 8
+              # 一楼出库移载接料完成
+              - nodeName: StockInPLCRead.TransferOutReceiveOK
+                startAddress: 9
+
+        - device: StockOutPLC
+#          host: 192.168.20.46
+          host: 127.0.0.1
+          port: 504
+          slaveId: 2
+          subscribeNodes:
+              # 出库移载准备ok信号
+              - nodeName: StockOutPLC.TransferOutReady
+                startAddress: 0
+                length: 20
+
+              # 出库移载清除ok信号
+              - nodeName: StockOutPLC.TransferClear
+                startAddress: 20
+                length: 20
+
+              # 请求写出货信号
+              - nodeName: StockOutPLC.TransferAsk
+                startAddress: 80
+                length: 5
+
+              # 出货口数据清除信号
+              - nodeName: StockOutPLC.TransferClearOutlet
+                startAddress: 90
+                length: 5
+
+              # 出货口满载信号
+              - nodeName: StockOutPLC.OutletEnough
+                startAddress: 106
+                length: 3
+        - device: TestStockInPLCWrite
+#                 host: 192.168.20.30
+          host: 127.0.0.1
+          port: 505
+          slaveId: 5
+          subscribeNodes:
+                        # 出库移载准备ok信号
+                        - nodeName: TestStockInPLCWrite.TestAskTrayMove
+                          startAddress: 0
+                          length: 2
+           # ===================================================================
+# WarehouseInfo properties.
+# ===================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
